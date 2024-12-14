@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -87,6 +88,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleUnsupportMediaTypeException(Exception ex) {
         return new ResponseEntity<>(ApiResponse.fail("서버 " +
                 "오류가 발생했습니다. 잠시 후 다시 시도해 주세요."+ex.getMessage()), HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+
+    @ExceptionHandler(HttpMessageNotWritableException.class)
+    public ResponseEntity<ApiResponse<String>> handleHttpMessageNotWritableException(Exception ex) {
+        return new ResponseEntity<>(ApiResponse.fail("서버 " +
+                "오류가 발생했습니다. 잠시 후 다시 시도해 주세요."+ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 
