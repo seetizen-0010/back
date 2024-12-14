@@ -50,4 +50,8 @@ public class PostService {
         postRepository.save(post);
         return post;
     }
+
+    public Post getPostById(Long postId) {
+        return postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("없는 게시글입니다."));
+    }
 }
