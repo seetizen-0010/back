@@ -14,6 +14,7 @@ import com.seetizen.backend.repository.ImageRepository;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,8 @@ public class ImageService {
 
     private ImageUploadResponse getAddressByMetadata(MultipartFile image) throws ImageProcessingException, IOException {
         // 이미지 위치 지정 및 File 로 변환(저장)
-        File destination = new File(PATH + image.getOriginalFilename());
+        UUID uuid = UUID.randomUUID();
+        File destination = new File(PATH + uuid + "_" + image.getOriginalFilename());
         image.transferTo(destination); // 파일을 local에 저장
         String imagePath = destination.getAbsolutePath();
         log.info("파일경로: " + imagePath);
@@ -92,8 +94,15 @@ public class ImageService {
         return metadata;
     }
 
-    private boolean hasGpsInformation(GpsDirectory gpsDirectory) {
-        return gpsDirectory.containsTag(GpsDirectory.TAG_LATITUDE) && gpsDirectory.containsTag(
-                GpsDirectory.TAG_LONGITUDE);
+    private boolean hasGpsInformation(GpsDirectory gpsDirectory) throws ImageProcessingException {
+        boolean result;
+        try {
+            result = gpsDirectory.containsTag(GpsDirectory.TAG_LATITUDE) && gpsDirectory.containsTag(
+                    GpsDirectory.TAG_LONGITUDE);
+        } catch (NullPointerException e) {
+            throw new ImageProcessingException("메타데이터에 위치정보가 없습니다.");
+        }
+
+        return result;
     }
 }
