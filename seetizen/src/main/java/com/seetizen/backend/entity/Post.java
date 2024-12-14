@@ -51,9 +51,11 @@ public class Post {
 
     public PostResponse toResponse() {
         String imagePath = null;
+        Long imageId = null;
         Optional<Image> maybeImage = Optional.ofNullable(image);
         if (maybeImage.isPresent()) {
             imagePath = maybeImage.get().getPath();
+            imageId = maybeImage.get().getId();
         }
         return PostResponse.builder()
                 .id(id)
@@ -66,8 +68,10 @@ public class Post {
                 .tag(splitTags(tag))
                 .address(address)
                 .imagePath(imagePath)
+                .imageId(imageId)
                 .build();
     }
+
     private List<String> splitTags(String concatenatedTags) {
         if (concatenatedTags == null || concatenatedTags.isEmpty()) {
             return List.of();
