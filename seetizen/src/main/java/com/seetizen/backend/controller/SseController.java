@@ -1,5 +1,6 @@
 package com.seetizen.backend.controller;
 
+import com.seetizen.backend.dto.EventMessage;
 import com.seetizen.backend.service.SseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -23,8 +24,9 @@ public class SseController {
 
     // 메시지 전송 엔드포인트
     @PostMapping("/send")
-    public Map<String, String> sendMessage(@RequestParam String clientId, @RequestParam String message) {
-        sseService.sendMessage(clientId, message);
+    public Map<String, String> sendMessage(@RequestParam String clientId, @RequestParam String message, @RequestParam String url) {
+        EventMessage eventMessage = new EventMessage(message, url);
+        sseService.sendMessage(clientId, eventMessage);
         return Map.of("status", "Message sent to client: " + clientId);
     }
 
