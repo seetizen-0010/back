@@ -32,7 +32,7 @@ public class PostService {
     }
 
     public Post likePost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(EntityNotFoundException::new);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("없는 게시글입니다."));
         Integer likes = post.getLikes();
         post.setLikes(likes + 1);
         postRepository.save(post);
@@ -40,7 +40,7 @@ public class PostService {
     }
 
     public Post dislikePost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(EntityNotFoundException::new);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new EntityNotFoundException("없는 게시글입니다."));
         Integer dislikes = post.getDislikes();
         post.setDislikes(dislikes + 1);
         postRepository.save(post);
