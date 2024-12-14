@@ -11,12 +11,23 @@ import com.seetizen.backend.dto.ImageUploadResponse;
 import com.seetizen.backend.dto.KakaoGeoResponse;
 import com.seetizen.backend.entity.Image;
 import com.seetizen.backend.repository.ImageRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,6 +55,22 @@ public class ImageService {
         imageUploadResponse.setId(savedDBImage.getId());
 
         return ApiResponse.success(imageUploadResponse, "주소를 성공적으로 가져왔습니다.");
+    }
+
+    public byte[] getImageById(Long imageId) throws NoSuchFieldException, IOException {
+        Image image = imageRepository.findById(imageId)
+                .orElseThrow(() -> new EntityNotFoundException("imageId에 맞는 이미지가 없습니다."));
+
+        String imageFileName = "이미지(" + imageId + ")";
+        // 이미지 파일 경로 생성
+        File file = new File(image.getPath());
+
+        // 파일이 존재하는지 확인
+        if (!file.exists()) {
+            throw new NoSuchFieldException("해당 파일이 존재하지 않습니다.");
+        }
+        Path imagePath = Paths.get(image.getPath());
+        return Files.readAllBytes(imagePath);
     }
 
     private ImageUploadResponse getAddressByMetadata(MultipartFile image) throws ImageProcessingException, IOException {
