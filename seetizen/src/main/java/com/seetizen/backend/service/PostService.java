@@ -2,7 +2,9 @@ package com.seetizen.backend.service;
 
 import com.seetizen.backend.dto.NearByPostRequest;
 import com.seetizen.backend.dto.PostRequest;
+import com.seetizen.backend.entity.Image;
 import com.seetizen.backend.entity.Post;
+import com.seetizen.backend.repository.ImageRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +18,12 @@ import java.util.List;
 @AllArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final ImageRepository imageRepository;
 
     public Post createPost(@RequestBody PostRequest postRequest) {
         Post newPost = postRequest.toEntity();
-        // todo: 이미지 가져오기
+        Image image = imageRepository.findById(postRequest.imageId()).orElseThrow(() -> new EntityNotFoundException("존재하지 않는 이미지입니다."));
+        newPost.setImage(image);
         postRepository.save(newPost);
         return newPost;
     }

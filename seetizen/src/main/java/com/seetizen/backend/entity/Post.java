@@ -4,13 +4,11 @@ import com.seetizen.backend.dto.PostResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.context.annotation.ScopeMetadata;
-import org.springframework.data.annotation.CreatedDate;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Getter
@@ -47,11 +45,16 @@ public class Post {
 
     @Column(nullable = false)
     String address;
-    //
-    // @Column
-    // Image image;
+
+    @OneToOne
+    Image image;
 
     public PostResponse toResponse() {
+        String imagePath = null;
+        Optional<Image> maybeImage = Optional.ofNullable(image);
+        if (maybeImage.isPresent()) {
+            imagePath = maybeImage.get().getPath();
+        }
         return PostResponse.builder()
                 .id(id)
                 .createdAt(createdAt)
@@ -62,6 +65,7 @@ public class Post {
                 .dislikes(dislikes)
                 .tag(splitTags(tag))
                 .address(address)
+                .imagePath(imagePath)
                 .build();
     }
     private List<String> splitTags(String concatenatedTags) {
