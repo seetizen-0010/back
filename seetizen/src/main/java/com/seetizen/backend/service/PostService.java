@@ -3,6 +3,7 @@ package com.seetizen.backend.service;
 import com.seetizen.backend.dto.NearByPostRequest;
 import com.seetizen.backend.dto.PostRequest;
 import com.seetizen.backend.entity.Post;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,21 @@ public class PostService {
                 nearByPostRequest.latitude(),
                 nearByPostRequest.longitude(),
                 1.0);
+    }
+
+    public Post likePost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(EntityNotFoundException::new);
+        Integer likes = post.getLikes();
+        post.setLikes(likes + 1);
+        postRepository.save(post);
+        return post;
+    }
+
+    public Post dislikePost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(EntityNotFoundException::new);
+        Integer dislikes = post.getDislikes();
+        post.setDislikes(dislikes + 1);
+        postRepository.save(post);
+        return post;
     }
 }

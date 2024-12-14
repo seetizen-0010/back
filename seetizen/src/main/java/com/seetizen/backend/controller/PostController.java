@@ -30,4 +30,16 @@ public class PostController {
         List<PostResponse> postResponses = posts.stream().map(Post::toResponse).toList();
         return ResponseEntity.ok(ApiResponse.success(postResponses, "성공"));
     }
+
+    @PatchMapping("/{id}/likes")
+    public ResponseEntity<ApiResponse<PostResponse>> likePost(@PathVariable("id") Long postId) {
+        Post post = postService.likePost(postId);
+        return ResponseEntity.ok(ApiResponse.success(post.toResponse(), "성공"));
+    }
+
+    @PatchMapping("/{id}/dislikes")
+    public ResponseEntity<ApiResponse<PostResponse>> dislikePost(@PathVariable("id") Long postId) {
+        Post post = postService.dislikePost(postId);
+        return ResponseEntity.ok(ApiResponse.success(post.toResponse(), "성공"));
+    }
 }
