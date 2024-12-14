@@ -28,10 +28,10 @@ public class PostService {
         return newPost;
     }
 
-    public List<Post> getAllPostByCoordinate(NearByPostRequest nearByPostRequest) {
+    public List<Post> getAllPostByCoordinate(double latitude, double longitude) {
         return postRepository.findAllNearByCoordinate(
-                nearByPostRequest.latitude(),
-                nearByPostRequest.longitude(),
+                latitude,
+                longitude,
                 1.0);
     }
 
