@@ -25,8 +25,10 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<PostResponse>>> getAllPostByCoordinate(@RequestBody NearByPostRequest nearByPostRequest) {
-        List<Post> posts = postService.getAllPostByCoordinate(nearByPostRequest);
+    public ResponseEntity<ApiResponse<List<PostResponse>>> getAllPostByCoordinate(
+            @RequestParam("latitude") double latitude,
+            @RequestParam("longitude") double longitude) {
+        List<Post> posts = postService.getAllPostByCoordinate(latitude, longitude);
         List<PostResponse> postResponses = posts.stream().map(Post::toResponse).toList();
         return ResponseEntity.ok(ApiResponse.success(postResponses, "성공"));
     }
