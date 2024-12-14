@@ -31,6 +31,12 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(postResponses, "성공"));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<PostResponse>> getPostById(@PathVariable Long id) {
+        Post post = postService.getPostById(id);
+        return ResponseEntity.ok(ApiResponse.success(post.toResponse(), "성공"));
+    }
+
     @PatchMapping("/{id}/likes")
     public ResponseEntity<ApiResponse<PostResponse>> likePost(@PathVariable("id") Long postId) {
         Post post = postService.likePost(postId);

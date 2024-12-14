@@ -18,6 +18,7 @@ public record PostResponse(
         Integer likes,
         Integer dislikes,
         List<String> tag,
-        String address
+        String address,
+        String imagePath
 ) {
 }
