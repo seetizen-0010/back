@@ -20,7 +20,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                 )) AS distance
             FROM post p
             HAVING distance <= :radius
-            ORDER BY distance
+            ORDER BY p.id
             """, nativeQuery = true)
     List<Post> findAllNearByCoordinate(
             @Param("latitude") double latitude,

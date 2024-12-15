@@ -39,7 +39,7 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
 
-    private static final String PATH = "/Users/leejuno/git/seetizen2/back/seetizen/src/main/resources/images/";
+    private static final String PATH = "/Users/kimtaekcheon/IdeaProjects/seetizen-back/seetizen/src/main/resources/images/";
     private static final String KAKAO_BASE_URL = "https://dapi.kakao.com/v2/local/geo/coord2address.json";
     private static final String KAKAO_API_KEY = "527c24de529e525e614182be5eba7c32";
 
